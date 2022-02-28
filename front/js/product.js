@@ -65,10 +65,12 @@ fetch(urlKanap)
 /* signaler à l'utilisateur qu'il doit faire un choix de couleur et de quantité pour pouvoir ajouter au panier */
         if(choiceIdKanap.quantityKanap==0 || choiceIdKanap.quantityKanap==null){
                 alert("Veuillez sélectionner une quantité pour ajouter votre article au panier");
+                localStorage.removeItem("productToCart");
                 /* on n'ajoute pas l'élément dans le localStorage ! */
                 
         }else if(choiceIdKanap.colorKanap==""){
                 alert("Veuillez choisir une couleur pour ajouter votre article au panier");
+                localStorage.removeItem("productToCart");
                 /* on n'ajoute pas l'élément dans le localStorage ! */
                 
         }else{
