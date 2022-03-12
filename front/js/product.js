@@ -79,7 +79,7 @@ fetch(urlKanap)
                 /* il est différent de undefined donc il existe déja dans le panier */
                 /* si le produit existe déjà dans le localStorage on change sa quantité */
                 let newQuantity =  foundProduct.quantityKanap + choiceIdKanap.quantityKanap; 
-                choiceIdKanap.quantityKanap = newQuantity;
+                foundProduct.quantityKanap = newQuantity;
                 console.log(newQuantity);
                 localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
                 alert("Votre produit a été ajouté au panier !");
