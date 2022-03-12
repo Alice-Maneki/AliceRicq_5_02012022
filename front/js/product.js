@@ -50,7 +50,7 @@ fetch(urlKanap)
 
     var button = document.getElementById("addToCart");
         button.addEventListener("click",function(){    
-            let choiceIdKanap = {
+            let choiceIdKanap = {/*objet*/
                 colorKanap : document.getElementById('colors').value,
                 idKanap : value._id,
                 nameKanap : value.name,
@@ -58,45 +58,45 @@ fetch(urlKanap)
                 imgAltKanap : value.altTxt,
                 quantityKanap : parseInt(document.getElementById('quantity').value),
                 priceKanap : value.price
-        }; /*objet*/
+        }; 
 
-        arrayProduct.push(choiceIdKanap); /* on push l'objet dans le tableau */
-
+  
 /* signaler à l'utilisateur qu'il doit faire un choix de couleur et de quantité pour pouvoir ajouter au panier */
         if(choiceIdKanap.quantityKanap==0 || choiceIdKanap.quantityKanap==null){
                 alert("Veuillez sélectionner une quantité pour ajouter votre article au panier");
-                localStorage.removeItem("productToCart");
                 /* on n'ajoute pas l'élément dans le localStorage ! */
                 
         }else if(choiceIdKanap.colorKanap==""){
                 alert("Veuillez choisir une couleur pour ajouter votre article au panier");
-                localStorage.removeItem("productToCart");
                 /* on n'ajoute pas l'élément dans le localStorage ! */
                 
         }else{
-                /* ajoute l'élément séléctionné dans le local storage */
+            let foundProduct = arrayProduct.find(product => product.idKanap == choiceIdKanap.idKanap && product.colorKanap == choiceIdKanap.colorKanap);
+             /* find() : permet de chercher un élément dans un tableau par rapport à une condition 
+            si il trouve l'élément va le retourner
+            sinon retourne undefined */
+            if(foundProduct != undefined){
+                /* il est différent de undefined donc il existe déja dans le panier */
+                /* si le produit existe déjà dans le localStorage on change sa quantité */
+                let newQuantity =  foundProduct.quantityKanap + choiceIdKanap.quantityKanap; 
+                choiceIdKanap.quantityKanap = newQuantity;
+                console.log(newQuantity);
                 localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
-                alert("Votre produit a été ajouté au panier");
-            }       
+                alert("Votre produit a été ajouté au panier !");
+            }else{
+                /* sinon on le rajoute au localStorage */
+                arrayProduct.push(choiceIdKanap);
+                localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
+                alert("Votre produit a été ajouté au panier !");
+            }
+            
+               
+            }
+                
+               
+
+        });     
 
                 
-/* si on ajoute un pdt dans le panier crée un nouvel élément mais incrémente la qté si il existe déjà (même id et couleur) */
-
-let productValid = JSON.parse(localStorage.getItem("productToCart"));
-if(productValid.quantityKanap==0 || productValid.colorKanap==""){
-    localStorage.removeItem("productToCart");
-}else{
-    for(i=0;i<productValid;i++){       
-        let sameProduct = arrayProduct.filter((product)=> product.colorKanap === choiceIdKanap.colorKanap && product.idKanap === choiceIdKanap.idKanap);
-        if(sameProduct.length){
-        let total = choiceIdKanap.quantityKanap + sameProduct[i].quantityKanap;
-        let index = arrayProduct.indexOf(sameProduct[i]);
-        arrayProduct[index].quantityKanap = total;
-        }else{
-        arrayProduct.push(choiceIdKanap);
-        localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
-        }
-    }
-}        
+        
     })
-});
