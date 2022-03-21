@@ -44,15 +44,13 @@ if(productInCart === null || productInCart == 0){
 
 /* total quantité */
 let totalQuantityCalcul = [];
+let sum = 0;
 for (let i=0;i<productInCart.length;i++){
   let quantityProduct = productInCart[i].quantityKanap;
   totalQuantityCalcul.push(quantityProduct);
+  sum += productInCart[i].quantityKanap;
 }
-for (let i=0;i<totalQuantityCalcul.length;i++){
-  sum = 0;
-  sum += totalQuantityCalcul[i];
-}
-let totalQuantity = totalQuantityCalcul;
+let totalQuantity = sum;
 document.getElementById("totalQuantity").innerHTML = totalQuantity;
 
 /* prix total */
@@ -60,7 +58,7 @@ document.getElementById("totalQuantity").innerHTML = totalQuantity;
 let totalPriceCalcul = [];
 /* aller chercher les prix dans le panier */
 for (let i=0;i<productInCart.length;i++){
-  let priceProduct =  productInCart[i].priceKanap;
+  let priceProduct =  productInCart[i].priceKanap * productInCart[i].quantityKanap;
   totalPriceCalcul.push(priceProduct);
 }
 /* additionner les prix présents dans le tableau avec la méthode .reducer */
@@ -73,28 +71,32 @@ document.getElementById("totalPrice").innerHTML = totalPrice;
 
 /* gérer la modification et la suppression de produits dans la page Panier : attention à modifier le DOM mais aussi localStorage */
 
+/* sélection des réf de tous les éléments "supprimer" */
 let deleteItem = document.querySelectorAll(".deleteItem");
 console.log(deleteItem);
-for(let i=0;i<deleteItem;i++){
-  deleteItem[i].addEventListener("click" , (event) =>{
-    
-    /* sélection de l'id du produit qui va être supprimer */
+
+for (let i=0;i<deleteItem.length;i++){
+  deleteItem[i].addEventListener("click", event => {
+    event.preventDefault();
+    console.log(event);
+    /* sélection de l'id du produit à supprimer */
     let idDeleteItem = productInCart[i].idKanap;
-    console.log("idDeleteItem");
+    let colorDeleteItem = productInCart[i].colorKanap;
     console.log(idDeleteItem);
-    /* avec méthode filter je sélectionne les éléments à garder et je supprime l'élément sélectionné */
-    productInCart = productInCart.filter( el => el.idKanap == idDeleteItem);
+    console.log(colorDeleteItem);
+    /* avec la méthode filter() je sélectionne les éléments à garder et je supprime les éléments où "supprimer" a été cliqué */
+    productInCart = productInCart.filter(el => el.idKanap == idDeleteItem && el.colorKanap == colorDeleteItem);
     console.log(productInCart);
-    localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
-    alert("Ce produit a été supprimer du panier !");
-    /* pour recharger la page et actualiser le nouveau panier */
-    window.location.href = "cart.html";
+    /* la méthode filter crée et retourne un nouveau tableau contenant tous les éléments du tableau d'origine qui remplissent une condition déterminée par la fonction callback */
+    /* on envoie les éléments non supprimés dans le localStorage */
+    JSON.parse(localStorage.getItem("productToCart"));
+    alert("ce produit a été supprimé de votre panier !");
+    /* recharger la page pour afficher le nouveau panier */
+    window.location.reload();
+    /* le nombre d'article total et le prix total sont mis à jour automatiquement quand la page se recharge */
+
   })
 }
-   
-
-  
-
 /* passer la commande : vérifier les données saisies et message d'erreur si nécessaire */
 /*valider le first Name=prénom du formulaire */
 let formFirstName = document.getElementById("firstName");
@@ -213,7 +215,8 @@ formValid.addEventListener("click", function(evt) {
   })
 
   .then((data) => {
-      let orderId = data.idKanap;
+      let orderId = data.orderId;
+      localStorage.setItem("myorder",JSON.stringify(orderId));
       /* quand on valide la commande on est redirigé vers la page confirmation */
       window.location.href= "confirmation.html" ; 
       /* afficher le numéro de commande pour confirmer la commande : requête Post de l'API et rediriger vers la page confirmation */

@@ -47,7 +47,7 @@ fetch(urlKanap)
 /* ajouter des pdts dans le panier: peut être un array qui contient = id produit, quantité et couleur du pdt */
 
     let arrayProduct =[]; /* tableau qui va regrouper les objets */
-
+    
     var button = document.getElementById("addToCart");
         button.addEventListener("click",function(){    
             let choiceIdKanap = {/*objet*/
@@ -69,7 +69,8 @@ fetch(urlKanap)
         }else if(choiceIdKanap.colorKanap==""){
                 alert("Veuillez choisir une couleur pour ajouter votre article au panier");
                 /* on n'ajoute pas l'élément dans le localStorage ! */
-                
+
+/* ajouter le produit choisi dans le panier et gérer les quantités */
         }else{
             let foundProduct = arrayProduct.find(product => product.idKanap == choiceIdKanap.idKanap && product.colorKanap == choiceIdKanap.colorKanap);
              /* find() : permet de chercher un élément dans un tableau par rapport à une condition 
@@ -90,7 +91,7 @@ fetch(urlKanap)
                 alert("Votre produit a été ajouté au panier !");
             }
             
-               
+            JSON.parse(localStorage.getItem("productToCart")); 
             }
                 
                
