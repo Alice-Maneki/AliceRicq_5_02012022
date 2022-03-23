@@ -1,7 +1,7 @@
 /* lié au fichier cart.html et confirmation.html */
 
 /* afficher un tableau récapitulatif des achats dans la page Panier : récupérer via le localStorage !attention à ne pas dupliquer les éléments! */
-
+/* récupérer les éléments ajouter dans le localStorage et les afficher */
 let productInCart = JSON.parse(localStorage.getItem("productToCart"));
 
 if(productInCart === null || productInCart == 0){
@@ -70,11 +70,29 @@ document.getElementById("totalPrice").innerHTML = totalPrice;
 
 
 /* gérer la modification et la suppression de produits dans la page Panier : attention à modifier le DOM mais aussi localStorage */
+/* modifier la quantité d'un produit directement sur la page panier si le produit existe déjà */
+let quantityItem = document.getElementsByClassName(".itemQuantity");
+quantityItem.forEach((tag) => {
+  let article = tag.closest("article");
+  let id = article.dataset.idKanap;
+  let color = article.dataset.colorKanap;
+  let newQuantity = "";
+  tag.addEventListener("change", event => {
+    event.preventDefault();
+    newQuantity = Number(tag.value);
+    productInCart.forEach((sofa) =>{
+      if (sofa.idKanap == id && sofa.colorKanap == color ){
+        sofa.quantityKanap = newQuantity;
+        document.location.reload();
+      }
+    })
+  })
+}) 
+
 
 /* sélection des réf de tous les éléments "supprimer" */
 let deleteItem = document.querySelectorAll(".deleteItem");
 console.log(deleteItem);
-
 for (let i=0;i<deleteItem.length;i++){
   deleteItem[i].addEventListener("click", event => {
     event.preventDefault();
@@ -87,15 +105,17 @@ for (let i=0;i<deleteItem.length;i++){
     /* avec la méthode filter() je sélectionne les éléments à garder et je supprime les éléments où "supprimer" a été cliqué */
     productInCart = productInCart.filter(el => el.idKanap == idDeleteItem && el.colorKanap == colorDeleteItem);
     console.log(productInCart);
+    console.log(productInCart.filter(el => el.idKanap == idDeleteItem && el.colorKanap == colorDeleteItem));
     /* la méthode filter crée et retourne un nouveau tableau contenant tous les éléments du tableau d'origine qui remplissent une condition déterminée par la fonction callback */
     /* on envoie les éléments non supprimés dans le localStorage */
-    JSON.parse(localStorage.getItem("productToCart"));
+    localStorage.setItem("productToCart", JSON.stringify(productInCart));
     alert("ce produit a été supprimé de votre panier !");
     /* recharger la page pour afficher le nouveau panier */
-    window.location.reload();
+    document.location.reload();
     /* le nombre d'article total et le prix total sont mis à jour automatiquement quand la page se recharge */
+    
+    })
 
-  })
 }
 /* passer la commande : vérifier les données saisies et message d'erreur si nécessaire */
 /*valider le first Name=prénom du formulaire */

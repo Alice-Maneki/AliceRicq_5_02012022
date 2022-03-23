@@ -34,7 +34,8 @@ fetch(urlKanap)
 
     let productDescription = document.getElementById("description"); 
     productDescription.innerText = value.description; 
-
+    
+    /*ajout de l'option qui permet de sélectionner une couleur parmi celles existantes pour chaque canapé */
     let productColors = document.getElementById("colors"); 
     for (i = 0; i < value.colors.length; i++) {
       let option = document.createElement("option"); 
@@ -91,7 +92,6 @@ fetch(urlKanap)
                 alert("Votre produit a été ajouté au panier !");
             }
             
-            JSON.parse(localStorage.getItem("productToCart")); 
             }
                 
                
