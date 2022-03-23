@@ -4,7 +4,7 @@
 
 /* récupérer l'id du pdt à afficher */
 
-const str = window.location.href;
+const str = document.location.href;
 const url = new URL(str);
 const id = url.searchParams.get("id");
     
@@ -46,8 +46,17 @@ fetch(urlKanap)
                 
 /* utiliser localstorage pour accèder à l'array depuis page panier ! */
 /* ajouter des pdts dans le panier: peut être un array qui contient = id produit, quantité et couleur du pdt */
-
-    let arrayProduct =[]; /* tableau qui va regrouper les objets */
+    function loadData(key, def){
+        var data = localStorage.getItem(key);
+        return null == data ? def : JSON.parse(data);
+    }
+    /* avant let arrayProduct = []; mais à chaque changement de page le nouveau produit ajouté prenait la place du pdt déjà présent
+    car à chaque chargement de la page push un tableau vide
+    mtn au lieu de créer un tableau vide à chaque fois on ajoute le tableau qui contient les élt déjà ajouté si il existe */
+    let arrayProduct =loadData("productToCart",[]); /* tableau qui va regrouper les objets */
+    function saveCart(arrayProduct){
+        localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
+    }
     
     var button = document.getElementById("addToCart");
         button.addEventListener("click",function(){    
@@ -83,12 +92,12 @@ fetch(urlKanap)
                 let newQuantity =  foundProduct.quantityKanap + choiceIdKanap.quantityKanap; 
                 foundProduct.quantityKanap = newQuantity;
                 console.log(newQuantity);
-                localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
+                saveCart(arrayProduct);
                 alert("Votre produit a été ajouté au panier !");
             }else{
                 /* sinon on le rajoute au localStorage */
                 arrayProduct.push(choiceIdKanap);
-                localStorage.setItem("productToCart",JSON.stringify(arrayProduct));
+                saveCart(arrayProduct);
                 alert("Votre produit a été ajouté au panier !");
             }
             
