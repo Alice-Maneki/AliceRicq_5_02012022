@@ -76,13 +76,18 @@ quantityItem.forEach((tag)=> {
   let id = article.dataset.idKanap;
   let color = article.dataset.colorKanap;
   let newQuantity = "";
-  tag.addEventListener("change", event =>{
+  tag.addEventListener("change", (event) =>{
     event.preventDefault();
+    /* nouvelle quantité que l'on souhaite mettre à jour dans le localStorage */
     newQuantity = Number(tag.value);
-    console.log(newQuantity);
-    productInCart.quantityKanap = newQuantity;
-    localStorage.setItem("productToCart",JSON.stringify(productInCart));
-    document.location.reload();
+    console.log(newQuantity); /* =affiche bien la nouvelle quantité modifiée manuellement */
+    productInCart.forEach((sofa, index) =>{
+      if(sofa.idKanap == id && sofa.colorKanap == color){
+        productInCart[index].quantityKanap = newQuantity;
+        localStorage.setItem("productToCart",JSON.stringify(productInCart));
+      }
+    })
+    
   })
 })
   /* sélection des réf de tous les éléments "supprimer" */
@@ -103,14 +108,17 @@ quantityItem.forEach((tag)=> {
         une condition déterminée par la fonction callback */
         productInCart = productInCart.filter(el => el.idKanap !== idDeleteItem || el.colorKanap !== colorDeleteItem);
         console.log(productInCart); 
-        /* on supprime l'élt du DOM */
-        event.target.closest('article').remove();
-        alert("ce produit a été supprimé de votre panier !");
-        /* on met à jour le localStorage */
-        localStorage.setItem("productToCart",JSON.stringify(productInCart));
-        /* recharger la page pour afficher le nouveau panier */
-        document.location.reload();
-        /* le nombre d'article total et le prix total sont mis à jour automatiquement quand la page se recharge */
+        if(confirm("Souhaites-vous vraiment supprimer ce produit du panier ?")){
+          /* on supprime l'élt du DOM */
+          event.target.closest('article').remove();
+          alert("ce produit a été supprimé de votre panier !");
+          /* on met à jour le localStorage */
+          localStorage.setItem("productToCart",JSON.stringify(productInCart));
+          /* recharger la page pour afficher le nouveau panier */
+          document.location.reload();
+          /* le nombre d'article total et le prix total sont mis à jour automatiquement quand la page se recharge */
+        }
+        
       })
     }
   }
