@@ -70,27 +70,35 @@ document.getElementById("totalPrice").innerHTML = totalPrice;
 
 
 /* gérer la modification et la suppression de produits dans la page Panier : attention à modifier le DOM mais aussi localStorage */
+
 let quantityItem = document.querySelectorAll(".itemQuantity");
 quantityItem.forEach((tag)=> {
+  
   let article = tag.closest("article");
-  let id = article.dataset.idKanap;
-  let color = article.dataset.colorKanap;
+  let id = article.dataset.id;
+  let color = article.dataset.color;
   let newQuantity = "";
   tag.addEventListener("change", (event) =>{
     event.preventDefault();
     /* nouvelle quantité que l'on souhaite mettre à jour dans le localStorage */
     newQuantity = Number(tag.value);
     console.log(newQuantity); /* =affiche bien la nouvelle quantité modifiée manuellement */
-    productInCart.forEach((sofa, index) =>{
-      if(sofa.idKanap == id && sofa.colorKanap == color){
-        productInCart[index].quantityKanap = newQuantity;
-        localStorage.setItem("productToCart",JSON.stringify(productInCart));
+    productInCart.forEach((sofa) =>{
+      if (sofa.idKanap == id && sofa.colorKanap == color){
+        sofa.quantityKanap = newQuantity;
+        if(confirm("Souhaitez-vous modifier la quantité de cet article?")){
+          /* mettre à jour la quantité dans le localStorage = OK */
+          localStorage.setItem("productToCart",JSON.stringify(productInCart));
+          /* recharger la page pour mettre à jour le total prix et quantité du panier */
+          document.location.reload();
+        }
+        
       }
     })
-    
-  })
+  })  
 })
-  /* sélection des réf de tous les éléments "supprimer" */
+  
+/* sélection des réf de tous les éléments "supprimer" */
   let deleteItem = document.querySelectorAll(".deleteItem");
   console.log(deleteItem);
   if (deleteItem.length != 0){
