@@ -161,7 +161,7 @@ const validLastName =  function (inputLastName){
   }else{
     formLastName.style.boxShadow ='0px 0px 10px red'
     formLastName.style.boxSizing = 'border-box'
-    document.getElementById("lastNameErrorMsg").innerHTML = `"${inputLast.value} n'est pas valide !"`
+    document.getElementById("lastNameErrorMsg").innerHTML = `"${inputLastName.value} n'est pas valide !"`
   }    
 };
 
